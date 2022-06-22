@@ -2,11 +2,24 @@ import argparse
 import os
 import random
 import xml.etree.ElementTree as ET
+from nltk.stem.snowball import SnowballStemmer
 from pathlib import Path
+import warnings
+
+# Ignore warning for append
+warnings.simplefilter(action='ignore', category=FutureWarning)
+
+stemmer = SnowballStemmer("english")
 
 def transform_name(product_name):
-    # IMPLEMENT
-    return product_name
+    # Transform names to lowercase
+    ret = product_name.lower()
+    # Remove non-alphanumeric characters other than space, hyphen, or period.
+    ret = ''.join(c for c in ret if c.isalpha() or c.isnumeric() or c=='-' or c==' ' or c =='.')
+    # Apply Snowball stemmer
+    ret = ' '.join(map(stemmer.stem, ret.split(' ')))
+
+    return ret
 
 # Directory for product data
 directory = r'/workspace/search_with_machine_learning_course/data/pruned_products/'
